@@ -1,76 +1,48 @@
-# 🚀 Spring Boot Domain Generator
+# IntelliJ-Spring-Boot-Domain-Generator
 
-> IntelliJ IDEA용 스프링 부트 도메인 자동 생성 플러그인
+> 단축키로 Spring Boot CRUD 도메인 패키지를 만드는 IntelliJ 플러그인
 
-## 📋 개요
+Spring Boot 프로젝트에서 도메인을 추가할 때마다 반복되는 Controller·Service·Entity·Repository·DTO·Exception 작성을 대신해 주는 IntelliJ IDEA 플러그인이다. 도메인 이름과 속성 목록을 입력하면 CRUD 코드가 들어 있는 패키지를 만든다. [Spring-Security-MySQL-JWT-Template](https://github.com/son-daehyeon/Spring-Security-MySQL-JWT-Template) 구조에 맞춰 2025년에 만들었고, JetBrains Marketplace에 "Spring Boot Domain Generator"로 올라가 있다.
 
-스프링 부트 프로젝트에서 반복적인 도메인 구조 생성을 자동화하는 IntelliJ IDEA 플러그인입니다.
-단 한 번의 키 입력으로 완전한 CRUD 구조를 가진 도메인 패키지를 생성할 수 있습니다.
+## 주요 기능
+- `domain` 패키지에서 `Ctrl + Shift + S` 또는 우클릭 → "New Spring Boot Domain"으로 생성 다이얼로그 열기
+- 다이얼로그에서 도메인명과 속성(이름, 타입, Nullable, 상세 조회 시 표시 여부)을 표로 입력
+- 도메인명·속성명·타입 형식과 중복 속성명 검사
+- 생성 파일
+  - `controller/{Name}Controller.java`: 목록·단건 조회, 생성, 수정, 삭제 엔드포인트
+  - `service/{Name}Service.java`
+  - `entity/{Name}.java`: 템플릿의 `BaseSchema`를 상속하는 JPA 엔티티
+  - `repository/{Name}Repository.java`: `JpaRepository<{Name}, UUID>`
+  - `dto/`: `Upsert{Name}Request`, `{Name}Response`, `Simple{Name}Response`, `{Name}ListResponse`
+  - `exception/{Name}Exceptions.java`
 
-## ✨ 주요 기능
+## 기술 스택
+| 영역 | 기술 |
+|---|---|
+| 언어 | Kotlin 2.1.0 (JVM 11) |
+| 프레임워크 | IntelliJ Platform Gradle Plugin 2.5.0, IntelliJ IDEA 2023.1 ~ 2025.1 (빌드 231 ~ 251.*) |
+| 라이브러리 | evo-inflector 1.3 |
 
-- **⚡ 원클릭 생성**: `Ctrl + Shift + S`로 즉시 도메인 생성
-- **🎯 완전한 CRUD**: Controller, Service, Entity, Repository, DTO, Exception 자동 생성
-- **🔗 템플릿 호환**: [Spring Boot Security MySQL JWT Template](https://github.com/son-daehyeon/spring-boot-security-mysql-jwt-template)과 완벽 호환
-
-## 🔧 자동 생성되는 파일들
-
+## 구조
 ```
-domain/
-└── [도메인명]/
-    ├── controller/
-    │   └── [도메인명]Controller.java
-    ├── service/
-    │   └── [도메인명]Service.java
-    ├── entity/
-    │   └── [도메인명]Entity.java
-    ├── repository/
-    │   └── [도메인명]Repository.java
-    ├── dto/
-    │   ├── [도메인명]RequestDto.java
-    │   └── [도메인명]ResponseDto.java
-    └── exception/
-        └── [도메인명]NotFoundException.java
+src/main/kotlin/com/github/son_daehyeon/spring_boot_domain_generator/
+├── action/GenerateDomainAction.kt    단축키·메뉴 액션, 입력 검증
+├── dialog/DomainGeneratorDialog.kt   도메인명·속성 입력 다이얼로그
+├── generator/                        Controller·Service·Entity·Repository·DTO·Exception 코드 생성
+└── model/DomainInfo.kt               도메인·속성 모델
+src/main/resources/META-INF/plugin.xml
 ```
 
-## 📦 설치 방법
+## 실행
+IntelliJ IDEA → Settings → Plugins → Marketplace에서 "Spring Boot Domain Generator"를 검색해 설치하거나, [Releases](https://github.com/son-daehyeon/IntelliJ-Spring-Boot-Domain-Generator/releases)에서 내려받는다. 소스에서 플러그인을 띄워 보려면 다음을 실행한다.
 
-### JetBrains Marketplace에서 설치
+```bash
+./gradlew runIde
+```
+[Spring-Security-MySQL-JWT-Template](https://github.com/son-daehyeon/Spring-Security-MySQL-JWT-Template) 기반 프로젝트의 `domain` 폴더에서 써야 한다.
 
-1. IntelliJ IDEA → `File` → `Settings` (또는 `Preferences`)
-2. `Plugins` → `Marketplace` 탭
-3. "Spring Boot Domain Generator" 검색
-4. `Install` 클릭
-5. IDE 재시작
+## 관련 저장소
+- [Spring-Security-MySQL-JWT-Template](https://github.com/son-daehyeon/Spring-Security-MySQL-JWT-Template) — 생성 코드가 맞춰진 기반 템플릿
 
-### 직접 다운로드
-
-[Github Releases](https://github.com/son-daehyeon/intellij-spring-boot-domain-generator/releases)에서 직접 다운로드 가능
-
-## 🚀 사용법
-
-> 이 플러그인을 사용하기 전에 [son-daehyeon/spring-boot-security-mysql-jwt-template](https://github.com/son-daehyeon/spring-boot-security-mysql-jwt-template)를 기반으로 프로젝트를 생성해야 합니다.
-
-1. 프로젝트의 `domain` 폴더로 이동
-2. `Ctrl + Shift + S` 단축키 입력 (또는 우클릭 → "New Spring Boot Domain")
-3. 도메인 이름 입력
-4. 자동으로 완전한 도메인 구조 생성 완료!
-
-## 📸 스크린샷
-
-### 플러그인 사용 화면
-<img src="https://plugins.jetbrains.com/files/27960/screenshot_0361bb1e-5bcd-42ad-a37e-881e2adcc62a" width="600">
-
-### 도메인 생성 다이얼로그
-<img src="https://plugins.jetbrains.com/files/27960/screenshot_ef2a1ece-3398-4215-a432-49323bc65576" width="600">
-
-### 생성된 파일 구조
-<img src="https://plugins.jetbrains.com/files/27960/screenshot_e9ee15a2-5df0-4199-951f-621f65569393" width="400">
-
-## 💻 호환성
-
-| 구분                | 지원 버전             |
-|:------------------|:------------------|
-| **IntelliJ IDEA** | 2023.1 ~ 2025.1.* |
-| **Spring Boot**   | 3.x               |
-| **Java**          | 11+               |
+---
+2025 · 개인 프로젝트 · 보관됨
